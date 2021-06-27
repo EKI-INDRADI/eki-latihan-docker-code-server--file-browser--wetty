@@ -52,7 +52,7 @@ docker run --rm -p 3000:3000 wettyoss/wetty --ssh-host=<YOUR-IP>
 for best config see : EKI_BEST_CONFIG.txt
 
 
-![alt text](http://url/to/img.png)
+![EXAMPLE](https://github.com/EKI-INDRADI/eki-latihan-docker-code-server--file-browser--wetty/raw/master/hasil/eki.png)
 
 
 # Regards,
