@@ -1,0 +1,130 @@
+
+---- documentation code server----
+docker run -it --name code-server -p 127.0.0.1:8080:8080 \
+  -v "$HOME/.config:/home/coder/.config" \
+  -v "$PWD:/home/coder/project" \
+  -u "$(id -u):$(id -g)" \
+  -e "DOCKER_USER=$USER" \
+  codercom/code-server:latest
+---- documentation code server----
+
+
+---- documentation file browser ----
+docker run \
+    -v /path/to/root:/srv \
+    -v /path/filebrowser.db:/database.db \
+    -v /path/.filebrowser.json:/.filebrowser.json \
+    --user $(id -u):$(id -g)
+    -p 80:80 \
+    filebrowser/filebrowser
+---- documentation file browser ----
+
+
+
+---- documentation wetty browser ----
+docker run --rm -p 3000:3000 wettyoss/wetty --ssh-host=<YOUR-IP>
+---- documentation wetty browser ----
+
+
+---- EKI CONFIG
+
+ssh <YOUR_USERNAME>@127.0.0.1 -p 2222
+
+
+---------- eki code-server config
+docker pull codercom/code-server:3.10.2
+
+mkdir -p /home/docker_rnd/FILE_DATA
+chmod 777 -Rv  /home/docker_rnd/FILE_DATA
+
+docker container create --name code_server_3.10.2_8080 \
+-p 8080:8080 \
+-v "/home/docker_rnd/FILE_DATA/:/home/coder/" \
+-u "$(id -u):$(id -g)" \
+-e "DOCKER_USER=$USER" \
+-e PASSWORD=masuk123 \
+codercom/code-server:3.10.2
+---------- eki code-server config
+
+
+
+
+---------- eki file browser config
+docker pull filebrowser/filebrowser:v2.15.0
+mkdir -p /home/docker_rnd/filebrowser
+chmod 777 -Rv /home/docker_rnd/filebrowser
+
+cd /home/docker_rnd/filebrowser/ && nano  docker_filebrowser.json
+
+---- 
+{
+  "port": 80,
+  "baseURL": "",
+  "address": "",
+  "log": "stdout",
+  "database": "/database.db",
+  "root": "/srv"
+}
+---
+
+
+cd /home/docker_rnd/filebrowser/ 
+cat > docker_database.db
+
+ctrl+c
+
+
+docker container create --name filebrowser_v2.15.0_80 \
+    -v /home/docker_rnd/FILE_DATA:/srv \
+    -v /home/docker_rnd/filebrowser/docker_database.db:/database.db \
+    -v /home/docker_rnd/filebrowser/docker_filebrowser.json:/.filebrowser.json \
+    --user $(id -u):$(id -g) \
+    -p 80:80 \
+    filebrowser/filebrowser:v2.15.0
+
+
+------------ example run + check error
+docker run \
+    -v /home/docker_rnd/FILE_DATA:/srv \
+    -v /home/docker_rnd/filebrowser/docker_database.db:/database.db \
+    -v /home/docker_rnd/filebrowser/docker_filebrowser.json:/.filebrowser.json \
+    --user $(id -u):$(id -g) \
+    -p 80:80 \
+    filebrowser/filebrowser:v2.15.0
+
+021/06/27 10:49:37 open /database.db: is a directory
+
+for fix bug :
+
+cd /home/docker_rnd/filebrowser/ 
+cat > docker_database.db
+
+------------ example run + check error
+
+
+---------- eki file browser config
+
+
+
+---------- eki wetty config
+
+docker pull wettyoss/wetty
+
+docker network inspect bridge
+ "Gateway": "172.17.0.1"
+
+docker create --name wetty_2000 \
+ --rm \
+ -p 2000:3000  \
+ wettyoss/wetty \
+ --ssh-host="172.17.0.1"
+
+docker container start wetty_2000
+
+---------- not recomended
+docker run --rm -p 2000:3000 wettyoss/wetty --ssh-host="172.17.0.1"
+----------
+
+---------- eki wetty config
+
+---- EKI CONFIG
