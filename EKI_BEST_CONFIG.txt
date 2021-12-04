@@ -38,12 +38,15 @@ mkdir -p /home/docker_rnd/FILE_DATA
 chmod 777 -Rv  /home/docker_rnd/FILE_DATA
 
 docker container create --name code_server_3.10.2_8080 \
+--restart always \
 -p 8080:8080 \
 -v "/home/docker_rnd/FILE_DATA/:/home/coder/" \
 -u "$(id -u):$(id -g)" \
 -e "DOCKER_USER=$USER" \
 -e PASSWORD=masuk123 \
 codercom/code-server:3.10.2
+
+docker container start code_server_3.10.2_8080
 ---------- eki code-server config
 
 
@@ -74,17 +77,24 @@ cat > docker_database.db
 ctrl+c
 
 
-docker container create --name filebrowser_v2.15.0_80 \
+docker container create --name filebrowser_v2.15.0_8081 \
+     --restart always \
     -v /home/docker_rnd/FILE_DATA:/srv \
     -v /home/docker_rnd/filebrowser/docker_database.db:/database.db \
     -v /home/docker_rnd/filebrowser/docker_filebrowser.json:/.filebrowser.json \
     --user $(id -u):$(id -g) \
-    -p 80:80 \
+    -p 8081:80 \
     filebrowser/filebrowser:v2.15.0
 
+docker container start filebrowser_v2.15.0_8081
 
------------- example run + check error
+
+user : admin
+password : admin
+
+------------ (NOT USED) example run + check error
 docker run \
+     --restart always \
     -v /home/docker_rnd/FILE_DATA:/srv \
     -v /home/docker_rnd/filebrowser/docker_database.db:/database.db \
     -v /home/docker_rnd/filebrowser/docker_filebrowser.json:/.filebrowser.json \
@@ -99,7 +109,7 @@ for fix bug :
 cd /home/docker_rnd/filebrowser/ 
 cat > docker_database.db
 
------------- example run + check error
+------------ (NOT USED)  example run + check error
 
 
 ---------- eki file browser config
@@ -113,17 +123,27 @@ docker pull wettyoss/wetty
 docker network inspect bridge
  "Gateway": "172.17.0.1"
 
+
+=============== (NOT USED) not recomended ===========
 docker create --name wetty_2000 \
  --rm \
  -p 2000:3000  \
  wettyoss/wetty \
- --ssh-host="172.17.0.1"
+ --ssh-host="172.17.0.1" --ssh-port=2222
+=============== (NOT USED) not recomended ===========
+
+docker create --name wetty_2000 \
+ --restart always \
+ -p 2000:3000  \
+ wettyoss/wetty \
+ --ssh-host="172.17.0.1" --ssh-port=2222
+
 
 docker container start wetty_2000
 
----------- not recomended
+---------- (NOT USED) not recomended
 docker run --rm -p 2000:3000 wettyoss/wetty --ssh-host="172.17.0.1"
-----------
+---------- (NOT USED)
 
 ---------- eki wetty config
 
